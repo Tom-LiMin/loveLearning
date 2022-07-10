@@ -1,4 +1,4 @@
-package com.course.system;
+package com.min.gateway;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,15 +9,15 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class SystemApplication {
+public class GatewayApplication {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SystemApplication.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GatewayApplication.class);
 
 	public static void main(String[] args) {
-		SpringApplication app = new SpringApplication(SystemApplication.class);
+		SpringApplication app = new SpringApplication(GatewayApplication.class);
 		Environment env = app.run(args).getEnvironment();
 		LOG.info("启动成功！！");
-		LOG.info("System地址: \thttp://127.0.0.1:{}", env.getProperty("server.port"));
+		LOG.info("Gateway地址: \thttp://127.0.0.1:{}", env.getProperty("server.port"));
 	}
 
 
