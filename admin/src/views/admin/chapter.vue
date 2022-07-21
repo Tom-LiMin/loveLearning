@@ -113,39 +113,93 @@ export default {
 
     list(page) {
       let _this = this;
+      Loading.show();
       _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/list', {
         page: page,
         size: _this.$refs.pagination.size,
       }).then((response)=>{
+        Loading.hide();
         console.log("查询大章列表结果：", response);
         let resp = response.data;
         _this.chapters = resp.content.list;
         _this.$refs.pagination.render(page, resp.content.total);
-
+        // toast.success("您要的已摆上桌！");
       })
     },
 
     save() {
       let _this = this;
+
+      // 保存校验
+      if (!Validator.require(_this.chapter.name, "名称")
+          || !Validator.require(_this.chapter.courseId, "课程ID")
+          || !Validator.length(_this.chapter.courseId, "课程ID", 1, 8)) {
+        return;
+      }
+
+      Loading.show();
       _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', _this.chapter).then((response)=>{
+        Loading.hide();
         console.log("保存大章列表结果：", response);
         let resp = response.data;
         if (resp.success) {
           $("#form-modal").modal("hide");
           _this.list(1);
+          Toast.success("保存成功！");
+        } else {
+          Toast.warning(resp.message);
         }
       })
     },
 
     del(id) {
       let _this = this;
-      _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response)=>{
-        console.log("删除大章列表结果：", response);
-        let resp = response.data;
-        if (resp.success) {
-          _this.list(1);
-        }
+      Confirm.show("该操作不可撤销，您确定要删除吗？",function () {
+        Loading.show();
+        _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response)=>{
+          console.log("删除大章列表结果：", response);
+          let resp = response.data;
+          if (resp.success) {
+            _this.list(1);
+            Toast.success("删除已完成.");
+          }
+        })
+
+        Swal.fire(
+            '已删除!',
+            '该大章已被删除.',
+            'success',
+        )
       })
+
+      /*Swal.fire({
+        title: '请再三思考下?',
+        text: "该操作不可撤销，真的要删除吗!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '是，请务必删除!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+
+          _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response)=>{
+            console.log("删除大章列表结果：", response);
+            let resp = response.data;
+            if (resp.success) {
+              _this.list(1);
+              Toast.success("删除已完成.");
+            }
+          })
+
+          Swal.fire(
+              '已删除!',
+              '该大章已被删除.',
+              'success',
+          )
+        }
+      })*/
+
     }
   }
 }
