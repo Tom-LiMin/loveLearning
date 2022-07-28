@@ -13,9 +13,9 @@ import java.util.Map;
 
 public class FreemarkerUtil {
 
-    static String ftlPath = "generator\\src\\main\\java\\com\\course\\generator\\ftl\\";
+    public static String ftlPath = "generator\\src\\main\\java\\com\\course\\generator\\ftl\\";
 //    static String toServicePath = "server\\src\\main\\java\\com\\course\\server\\service\\";
-    static Template temp;
+    public static Template temp;
 
     // 初始化 读取文件
     public static void initConfig(String ftlName) throws IOException {
