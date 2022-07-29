@@ -1,7 +1,6 @@
 package com.course.generator.util;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
@@ -83,7 +82,7 @@ public class CommonUtil {
         map.put("typeSet",typeSet);
 
         FreemarkerUtil.initConfig(ftlName);
-        FreemarkerUtil.generator(toPath+Domain+fileName,map);
+        FreemarkerUtil.generator(toPath+domain+fileName,map);
 
     }
 
