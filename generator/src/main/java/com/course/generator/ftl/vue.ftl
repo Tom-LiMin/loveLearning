@@ -30,6 +30,9 @@
       <tr v-for="${domain} in ${domain}s">
         <#list fieldList as field>
           <#if field.nameHump!="createdAt" && field.nameHump!="updatedAt">
+            <#if field.length == 1 >
+        <td>{{COURSE_LEVEL | optionKV(course.level)}}</td>
+            </#if>
         <td>{{${domain}.${field.nameHump}}}</td>
           </#if>
         </#list>
@@ -93,9 +96,6 @@
       let _this = this;
       _this.$refs.pagination.size = 5;
       _this.list(1);
-      // sidebar激活样式方法一
-      // this.$parent.activeSidebar("${module}-${domain}-sidebar");
-
     },
     methods: {
       /**
@@ -148,7 +148,7 @@
           || !Validator.require(_this.${domain}.${field.nameHump}, "${field.nameCn}")
             </#if>
             <#if (field.length > 0)>
-          || !Validator.length(_this.${domain}.${field.nameHump}, "${field.nameCn}", 1, ${field.length})
+          || !Validator.length(_this.${domain}.${field.nameHump}, "${field.nameCn}", 1, ${field.length?c})
             </#if>
           </#if>
         </#list>
