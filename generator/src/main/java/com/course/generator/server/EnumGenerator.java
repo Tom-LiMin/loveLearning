@@ -106,7 +106,8 @@ public class EnumGenerator {
      */
     public static String toUnderline(String str) {
         String result = underline(str).toString();
-        return result.substring(1, result.length()).toUpperCase().replace("_ENUM", "");
+//        return result.substring(1, result.length()).toUpperCase().replace("_ENUM", "");
+        return result.substring(1, result.length()).toUpperCase().replace("ENUM", "");
     }
 
     /**
