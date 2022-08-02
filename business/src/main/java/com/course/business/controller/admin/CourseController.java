@@ -28,6 +28,7 @@ public class CourseController {
     public ResponseDto list(@RequestBody PageDto pageDto) {
         ResponseDto responseDto = new ResponseDto();
         courseService.list(pageDto);
+
         responseDto.setContent(pageDto);
         return responseDto;
     }

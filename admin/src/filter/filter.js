@@ -39,5 +39,6 @@ let optionKVArray = (list, key) =>  {
     }
 };
 export default {
-    optionKV
+    optionKV,
+    // formatSecond
 }

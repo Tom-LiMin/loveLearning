@@ -17,8 +17,8 @@
     <div class="row">
       <div v-for="course in courses" class="col-md-4">
         <div class="thumbnail search-thumbnail">
-          <img v-show="!course.image" class="media-object" src="/static/image/Gundam-age.jpg" />
-          <img v-show="course.image" class="media-object" v-bind:src="course.image" />
+          <img v-show="!course.image" class="media-object" src="/static/image/Gundam-age.jpg"  height="640" />
+          <img v-show="course.image" class="media-object" v-bind:src="course.image"  height="640" />
           <div class="caption">
             <div class="clearfix">
               <span class="pull-right label label-grey info-label">
