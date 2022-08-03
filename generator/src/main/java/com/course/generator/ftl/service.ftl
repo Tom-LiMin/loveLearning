@@ -37,7 +37,6 @@ public class ${Domain}Service {
         ${domain}Example.setOrderByClause("sort asc");
             </#if>
         </#list>
-
         List<${Domain}> ${domain}List = ${domain}Mapper.selectByExample(${domain}Example);
         PageInfo<${Domain}> pageInfo = new PageInfo<>(${domain}List);
         pageDto.setTotal(pageInfo.getTotal());
@@ -61,7 +60,11 @@ public class ${Domain}Service {
      * 新增
      */
     private void insert(${Domain} ${domain}) {
+        <#list typeSet as type>
+            <#if type=='Date'>
         Date now = new Date();
+            </#if>
+        </#list>
        <#list fieldList as field>
             <#if field.nameHump=='createdAt'>
         ${domain}.setCreatedAt(now);
