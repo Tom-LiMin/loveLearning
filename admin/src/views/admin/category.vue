@@ -255,6 +255,7 @@
             let resp = response.data;
             if (resp.success) {
               _this.all();
+             // _this.active = null;
               Toast.success("删除成功！");
             }
           })

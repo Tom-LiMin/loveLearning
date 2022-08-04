@@ -165,12 +165,12 @@ export default {
       COURSE_CHARGE: COURSE_CHARGE,
       COURSE_STATUS: COURSE_STATUS,
       categorys:[],
+      tree:{},
     }
   },
   mounted: function () {
     let _this = this;
     _this.$refs.pagination.size = 5;
-    _this.initTree();
     _this.allCategory();
     _this.list(1);
     // sidebar激活样式方法一
@@ -217,7 +217,7 @@ export default {
     /**
      * 点击【保存】
      */
-    save(page) {
+    save() {
       let _this = this;
 
       // 保存校验
@@ -229,6 +229,14 @@ export default {
       ) {
         return;
       }
+
+      let categorys = _this.tree.getCheckedNodes();
+      if (Tool.isEmpty(categorys)) {
+        Toast.warning("请选择分类!!!");
+        return;
+      }
+      console.log(categorys);
+      _this.course.categorys = categorys;
 
       Loading.show();
       _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save', _this.course).then((response) => {
@@ -301,7 +309,7 @@ export default {
 
       let zNodes = _this.categorys;
 
-      $.fn.zTree.init($("#tree"), setting, zNodes);
+      _this.tree = $.fn.zTree.init($("#tree"), setting, zNodes);
     }
   }
 }

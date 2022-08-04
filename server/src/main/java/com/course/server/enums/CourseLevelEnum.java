@@ -1,6 +1,7 @@
 package com.course.server.enums;
 
 public enum CourseLevelEnum {
+    ZERO("0","未定"),
     ONE("1", "初级"),
     TWO("2", "中级"),
     THREE("3", "高级");

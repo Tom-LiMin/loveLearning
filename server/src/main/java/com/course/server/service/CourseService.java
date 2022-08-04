@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class CourseService {
@@ -29,6 +29,9 @@ public class CourseService {
 
     @Resource
     private MyCourseMapper myCourseMapper;
+
+    @Resource
+    private CourseCategoryService courseCategoryService;
 
     /**
      * 列表查询
@@ -55,6 +58,10 @@ public class CourseService {
         } else {
             this.update(course);
         }
+
+        // 批量保存课程 分类
+//        courseCategoryService.saveBatch(courseDto);
+        courseCategoryService.saveBatch(course.getId(),courseDto.getCategorys());
     }
 
     /**
