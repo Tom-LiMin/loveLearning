@@ -139,8 +139,8 @@
       let _this = this;
       _this.$refs.pagination.size = 5;
       // 从缓存中去取
-      let course = SessionStorage.get("course") || {};
-      let chapter = SessionStorage.get("chapter") || {};
+      let course = SessionStorage.get(SESSION_KEY_COURSE) || {};
+      let chapter = SessionStorage.get(SESSION_KEY_CHAPTER) || {};
       if (Tool.isEmpty(course) || Tool.isEmpty(chapter)) {
         _this.$router.push("/welcome");
       }
