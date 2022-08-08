@@ -38,6 +38,7 @@ public class UploadController {
         LOG.info(dest.getAbsolutePath());
 
         ResponseDto responseDto = new ResponseDto<>();
+        responseDto.setContent(new StringBuilder("http://127.0.0.1:9003/file/f/teacher/").append(key).append("-").append(fileName));   //"http://127.0.0.1:9003/file/f/teacher/"+key+"-"+fileName
         return responseDto;
     }
 }

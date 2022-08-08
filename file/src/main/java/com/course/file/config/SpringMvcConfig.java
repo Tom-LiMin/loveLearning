@@ -10,7 +10,7 @@ public class SpringMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        WebMvcConfigurer.super.addResourceHandlers(registry);
-        registry.addResourceHandler("/f/**").addResourceLocations("file:D:/mycode/workspace/file/course-online/course");
+        registry.addResourceHandler("/f/**").addResourceLocations("file:D:/mycode/workspace/file/course-online/course/");
     }
 
 }
