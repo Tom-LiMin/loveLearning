@@ -25,13 +25,13 @@ public class UploadController {
     @RequestMapping("/upload")
     public ResponseDto upload(@RequestParam MultipartFile file) throws IOException {
         LOG.info("上传文件开始：{}", file);
-        LOG.info(file.getOriginalFilename());
-        LOG.info(String.valueOf(file.getSize()));
+        LOG.info("文件名：{}",file.getOriginalFilename());
+        LOG.info("文件大小：{}",String.valueOf(file.getSize()));
 
         // 保存文件到本地
         String fileName = file.getOriginalFilename();
         String key = UuidUtil.getShortUuid();
-        String fullPath = "D:/mycode/workspace/file/" + key + "-" + fileName;
+        String fullPath = "D:/mycode/workspace/file/course-online/course/teacher/" + key + "-" + fileName;
         File dest = new File(fullPath);
 
         file.transferTo(dest);
