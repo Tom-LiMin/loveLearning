@@ -1,6 +1,8 @@
 package com.course.file.controller.admin;
 
+import com.course.server.dto.FileDto;
 import com.course.server.dto.ResponseDto;
+import com.course.server.service.FileService;
 import com.course.server.service.TestService;
 import com.course.server.util.UuidUtil;
 import org.slf4j.Logger;
@@ -23,6 +25,9 @@ public class UploadController {
 
     public static final String BUSINESS_NAME = "文件上传";
 
+    @Resource
+    private FileService fileService;
+
     @Value("${file.domain}")
     private String FILE_DOMAIN;
 
@@ -38,14 +43,24 @@ public class UploadController {
         // 保存文件到本地
         String fileName = file.getOriginalFilename();
         String key = UuidUtil.getShortUuid();
-        String fullPath = FILE_PATH + key + "-" + fileName;
+        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        String path = "teacher/" + key + "." + fileName;
+        String fullPath = FILE_PATH + path;
         File dest = new File(fullPath);
-
         file.transferTo(dest);
         LOG.info(dest.getAbsolutePath());
 
+        LOG.info("保存文件记录开始");
+        FileDto fileDto = new FileDto();
+        fileDto.setPath(path);
+        fileDto.setName(fileName);
+        fileDto.setSize(Math.toIntExact(file.getSize()));
+        fileDto.setSuffix(suffix);
+        fileDto.setUse("C");
+        fileService.save(fileDto);
+
         ResponseDto responseDto = new ResponseDto<>();
-        responseDto.setContent(new StringBuilder(FILE_DOMAIN).append(key).append("-").append(fileName));   //"http://127.0.0.1:9003/file/f/teacher/"+key+"-"+fileName
+        responseDto.setContent(new StringBuilder(FILE_DOMAIN).append(path));   //"http://127.0.0.1:9003/file/f/teacher/"+key+"-"+fileName
         return responseDto;
     }
 }

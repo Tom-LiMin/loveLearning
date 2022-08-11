@@ -85,7 +85,7 @@
                 <div class="col-sm-10">
                   <file v-bind:input-id="'image-upload'"
                         v-bind:text="'上传头像'"
-                        v-bind:suffixs="['jpg','jpeg','png']"
+                        v-bind:suffixs="['jpg','jpeg','png','gif']"
                         v-bind:after-upload="afterUpload"></file>
                   <div v-show="teacher.image" class="row">
                     <div class="col-md-4">
