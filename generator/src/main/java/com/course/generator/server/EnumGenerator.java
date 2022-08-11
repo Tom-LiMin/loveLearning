@@ -21,6 +21,7 @@ public class EnumGenerator {
             toJson(CourseLevelEnum.class, bufferObject, bufferArray);
             toJson(CourseChargeEnum.class, bufferObject, bufferArray);
             toJson(CourseStatusEnum.class, bufferObject, bufferArray);
+            toJson(FileUseEnum.class, bufferObject, bufferArray);
 
             StringBuffer buffer = bufferObject.append("\r\n").append(bufferArray);  //拼接Object和Array
             writeJs(buffer);
@@ -107,7 +108,7 @@ public class EnumGenerator {
     public static String toUnderline(String str) {
         String result = underline(str).toString();
 //        return result.substring(1, result.length()).toUpperCase().replace("_ENUM", "");
-        return result.substring(1, result.length()).toUpperCase().replace("ENUM", "");
+        return result.substring(1, result.length()).toUpperCase().replace("_ENUM", "");
     }
 
     /**
