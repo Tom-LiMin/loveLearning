@@ -447,7 +447,7 @@
               <li class="active" id="file-file-sidebar">
                 <router-link to="/file/file">
                   <i class="menu-icon fa fa-caret-right"></i>
-                  文件管理
+                  文件记录管理
                 </router-link>
 
                 <b class="arrow"></b>

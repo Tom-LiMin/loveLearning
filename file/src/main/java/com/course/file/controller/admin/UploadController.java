@@ -2,6 +2,7 @@ package com.course.file.controller.admin;
 
 import com.course.server.dto.FileDto;
 import com.course.server.dto.ResponseDto;
+import com.course.server.enums.FileUseEnum;
 import com.course.server.service.FileService;
 import com.course.server.service.TestService;
 import com.course.server.util.UuidUtil;
@@ -35,16 +36,25 @@ public class UploadController {
     private String FILE_PATH;
 
     @RequestMapping("/upload")
-    public ResponseDto upload(@RequestParam MultipartFile file) throws IOException {
-        LOG.info("上传文件开始：{}", file);
+    public ResponseDto upload(@RequestParam MultipartFile file,String use) throws IOException {
+        LOG.info("上传文件开始：");  // 因为只是个hash值，就不打印了
         LOG.info("文件名：{}",file.getOriginalFilename());
         LOG.info("文件大小：{}",String.valueOf(file.getSize()));
 
         // 保存文件到本地
+        FileUseEnum useEnum = FileUseEnum.getByCode(use);
         String fileName = file.getOriginalFilename();
         String key = UuidUtil.getShortUuid();
         String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-        String path = "teacher/" + key + "." + fileName;
+
+        // 如果文件不存在则创建
+        String dir = useEnum.name().toLowerCase();
+        File fullDir = new File(FILE_PATH + dir);
+        if (!fullDir.exists()) {
+            fullDir.mkdir();
+        }
+
+        String path = dir + File.separator + key + "." + fileName;
         String fullPath = FILE_PATH + path;
         File dest = new File(fullPath);
         file.transferTo(dest);
@@ -56,7 +66,7 @@ public class UploadController {
         fileDto.setName(fileName);
         fileDto.setSize(Math.toIntExact(file.getSize()));
         fileDto.setSuffix(suffix);
-        fileDto.setUse("C");
+        fileDto.setUse(use);
         fileService.save(fileDto);
 
         ResponseDto responseDto = new ResponseDto<>();
