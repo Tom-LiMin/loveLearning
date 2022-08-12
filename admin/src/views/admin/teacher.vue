@@ -234,7 +234,7 @@
 
       afterUpload (resp) {
         let _this = this;
-        let image = resp.content;
+        let image = resp.content.path;
         _this.teacher.image = image;
       }
     }

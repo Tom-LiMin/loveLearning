@@ -70,7 +70,9 @@ public class UploadController {
         fileService.save(fileDto);
 
         ResponseDto responseDto = new ResponseDto<>();
-        responseDto.setContent(new StringBuilder(FILE_DOMAIN).append(path));   //"http://127.0.0.1:9003/file/f/teacher/"+key+"-"+fileName
+//        responseDto.setContent(new StringBuilder(FILE_DOMAIN).append(path));   //"http://127.0.0.1:9003/file/f/teacher/"+key+"-"+fileName
+        fileDto.setPath(FILE_DOMAIN + path);
+        responseDto.setContent(fileDto);
         return responseDto;
     }
 }
