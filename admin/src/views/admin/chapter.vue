@@ -239,7 +239,7 @@ export default {
      */
     toSection(chapter) {
       let _this = this;
-      SessionStorage.set("chapter", chapter);
+      SessionStorage.set(SESSION_KEY_CHAPTER, chapter);
       _this.$router.push("/business/section");
     }
   }
