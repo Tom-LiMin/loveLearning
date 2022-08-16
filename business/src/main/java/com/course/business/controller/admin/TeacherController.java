@@ -25,7 +25,7 @@ public class TeacherController {
     /**
      * 查询所有的讲师
      */
-    @PostMapping("/all")
+    @GetMapping("/all")
     public ResponseDto all() {
         ResponseDto responseDto = new ResponseDto();
         List<TeacherDto> teacherDtoList = teacherService.all();
