@@ -39,6 +39,22 @@ export default {
       let formData = new window.FormData();
       let file = _this.$refs.file.files[0];
 
+      console.log(file);
+      /*
+        name: "test.mp4"
+        lastModified: 1901173357457
+        lastModifiedDate: Tue May 27 2099 14:49:17 GMT+0800 (中国标准时间) {}
+        webkitRelativePath: ""
+        size: 37415970
+        type: "video/mp4"
+      */
+
+      // 生成文件标识，标识多次上传的是不是同一个文件
+      let key = hex_md5(file);
+      let key10 = parseInt(key, 16);
+      let key62 = Tool._10to62(key10);
+      console.log(key, key10, key62);
+
       // 判断文件格式
       let suffixs = _this.suffixs;
       let fileName = file.name;
@@ -58,14 +74,24 @@ export default {
 
       // 文件分片
       let shardSize = 10 * 1024 * 1024;   // 以10MB为一个分片
-      let shardIndex = 1;  // 分片索引
+      let shardIndex = 2;  // 分片索引
       let start = shardIndex * shardSize; // 当前分片起始位置
       let end = Math.min(file.size,start + shardSize);  // 当前分片结束的位置
       let fileShard = file.slice(start,end);
+      let size = file.size;
+      let shardTotal = Math.ceil(size / shardSize); //总片数
 
-      // key："file"必须和后端controller参数名一致
-      formData.append('file', fileShard);
+      // key："shard"必须和后端controller参数名一致
+      formData.append('shard', fileShard);
+      formData.append('shardIndex', shardIndex);
+      formData.append('shardSize', shardSize);
+      formData.append('shardTotal', shardTotal);
       formData.append('use', _this.use);
+      formData.append('name', file.name);
+      formData.append('suffix', suffix);
+      formData.append('size', size);
+      formData.append('key', key);
+
       Loading.show();
       _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then((response)=>{
         Loading.hide();
