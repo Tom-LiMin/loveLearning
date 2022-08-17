@@ -233,6 +233,7 @@
 <script>
 import Pagination from "../../components/pagination";
 import File from "../../components/file";
+// import BigFile from "../../components/big-file";
 export default {
   components: {Pagination,File},
   name: "business-course",
@@ -257,7 +258,7 @@ export default {
   },
   mounted: function () {
     let _this = this;
-    _this.$refs.pagination.size = 8;
+    _this.$refs.pagination.size = 10;
     _this.allCategory();
     _this.allTeacher();
     _this.list(1);

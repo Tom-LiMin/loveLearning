@@ -9,14 +9,14 @@ import com.course.server.util.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 @RequestMapping("/admin")
 @RestController
@@ -75,5 +75,41 @@ public class UploadController {
         fileDto.setPath(FILE_DOMAIN + path);
         responseDto.setContent(fileDto);
         return responseDto;
+    }
+
+    @GetMapping("/merge")
+    public ResponseDto merge() throws FileNotFoundException {
+        File newFile = new File(FILE_PATH + "/course/test233.mp4");
+        // 新建 I/O 流
+        FileOutputStream outputStream = new FileOutputStream(newFile,true);  // 选择追加写入的方式
+        FileInputStream fileInputStream = null;
+        byte[] bytes = new byte[10 * 1024 * 1024];
+        int len;
+
+        try {
+            //读取第一个分片
+            fileInputStream = new FileInputStream(new File(FILE_PATH + "/course/GLx4oGjo.blob"));
+            while ((len = fileInputStream.read(bytes)) != -1) {
+                outputStream.write(bytes,0,len);
+            }
+            //读取第二个分片
+            fileInputStream = new FileInputStream(new File(FILE_PATH + "/course/bNZn7GI2.blob"));
+            while ((len = fileInputStream.read(bytes)) != -1) {
+                outputStream.write(bytes,0,len);
+            }
+        } catch (IOException e) {
+            LOG.error("分片合并异常",e);
+        } finally {
+            try {
+                if (fileInputStream != null) {
+                    fileInputStream.close();
+                }
+                outputStream.close();
+                LOG.info("IO流关闭");
+            } catch (Exception e) {
+                LOG.error("IO流关闭", e);
+            }
+        }
+        return new ResponseDto();
     }
 }

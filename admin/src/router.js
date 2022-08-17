@@ -32,11 +32,11 @@ export default new Router({
             component: Welcome
         },{
             path: "business/category",
-            name: "business /category",
+            name: "business/category",
             component: Category,
         },{
             path: "business/course",
-            name: "business /course",
+            name: "business/course",
             component: Course,
         }, {
             path: "business/chapter",
