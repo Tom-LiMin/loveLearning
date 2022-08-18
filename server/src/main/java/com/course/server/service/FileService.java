@@ -10,11 +10,12 @@ import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class FileService {
@@ -44,9 +45,23 @@ public class FileService {
         if (StringUtils.isEmpty(fileDto.getId())) {
             this.insert(file);
         } else {
-            this.update(file);
+            File fileDb = selectByKey(fileDto.getKey());
+            fileDb.setShardIndex(fileDto.getShardIndex());
+            this.update(fileDb);
         }
     }
+       //  觉得不需要下面这样 分流判断
+    /*public void save(FileDto fileDto) {
+        File file = CopyUtil.copy(fileDto, File.class);
+        File fileDb = selectByKey(fileDto.getKey());
+        if (fileDb == null) {
+            this.insert(file);
+        } else {
+            fileDb.setShardIndex(fileDto.getShardIndex());
+            this.update(fileDb);
+        }
+    }*/
+
 
     /**
      * 新增
@@ -72,5 +87,19 @@ public class FileService {
      */
     public void delete(String id) {
         fileMapper.deleteByPrimaryKey(id);
+    }
+
+
+    // 根据key值从数据库的记录中 找到 上传视频的信息
+    public File selectByKey(String key) {
+        FileExample example = new FileExample();
+        FileExample.Criteria criteria = example.createCriteria();
+        criteria.andKeyEqualTo(key);
+        List<File> fileList = fileMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(fileList)) {
+            return null;
+        } else {
+            return fileList.get(0);
+        }
     }
 }

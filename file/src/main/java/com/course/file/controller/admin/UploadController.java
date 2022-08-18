@@ -55,7 +55,7 @@ public class UploadController {
             fullDir.mkdir();
         }
 
-        // String path = dir + File.separator + key + "." + fileName;
+        // String path = dir + File.separator + fileName + "-" + key + "." + suffix;
         String path = new StringBuffer(dir).append(File.separator).append(key).append(".").append(suffix).toString();
         String fullPath = FILE_PATH + path;
         File dest = new File(fullPath);
