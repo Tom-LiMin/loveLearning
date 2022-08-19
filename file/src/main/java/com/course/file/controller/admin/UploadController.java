@@ -56,9 +56,15 @@ public class UploadController {
                 .append(key)
                 .append(".")
                 .append(suffix)
+                .toString();
+        String localPath = new StringBuffer(dir)
+                .append(File.separator)
+                .append(key)
+                .append(".")
+                .append(suffix)
                 .append(".")
                 .append(fileDto.getShardIndex()).toString();
-        String fullPath = FILE_PATH + path;
+        String fullPath = FILE_PATH + localPath;
         File dest = new File(fullPath);
         shard.transferTo(dest);
         LOG.info(dest.getAbsolutePath());
@@ -66,6 +72,10 @@ public class UploadController {
         LOG.info("保存文件记录开始");
         fileDto.setPath(path);
         fileService.save(fileDto);
+
+        if (fileDto.getShardIndex() == fileDto.getShardTotal()) {
+            this.merge(fileDto);
+        }
 
         ResponseDto responseDto = new ResponseDto<>();
 //        responseDto.setContent(new StringBuilder(FILE_DOMAIN).append(path));   //"http://127.0.0.1:9003/file/f/teacher/"+key+"-"+fileName
@@ -75,8 +85,12 @@ public class UploadController {
     }
 
     @GetMapping("/merge")
-    public ResponseDto merge() throws FileNotFoundException {
-        File newFile = new File(FILE_PATH + "/course/test233.mp4");
+    public void merge(FileDto fileDto) throws FileNotFoundException {
+        LOG.info("合并分片开始");
+        String path = fileDto.getPath();  // 注意这个取得是全路径
+        path.replace(FILE_DOMAIN,""); // 要获取的是相对路径
+        Integer shardTotal = fileDto.getShardTotal();
+        File newFile = new File(FILE_PATH + path);
         // 新建 I/O 流
         FileOutputStream outputStream = new FileOutputStream(newFile,true);  // 选择追加写入的方式
         FileInputStream fileInputStream = null;
@@ -84,19 +98,15 @@ public class UploadController {
         int len;
 
         try {
+            for (int i = 0; i < shardTotal; i++) {
+                //读取分片
+                fileInputStream = new FileInputStream(new File(new StringBuffer(FILE_PATH).append(path).append(".").append((i+1)).toString()));
+                while ((len = fileInputStream.read(bytes)) != -1) {
+                    outputStream.write(bytes,0,len);
+                }
+            }
             //读取第一个分片
-            fileInputStream = new FileInputStream(new File(FILE_PATH + "/course/GLx4oGjo.blob"));
-            while ((len = fileInputStream.read(bytes)) != -1) {
-                outputStream.write(bytes,0,len);
-            }
-            //读取第二个分片
-            fileInputStream = new FileInputStream(new File(FILE_PATH + "/course/bNZn7GI2.blob"));
-            while ((len = fileInputStream.read(bytes)) != -1) {
-                outputStream.write(bytes,0,len);
-            }
-        } catch (IOException e) {
-            LOG.error("分片合并异常",e);
-        } finally {
+
             try {
                 if (fileInputStream != null) {
                     fileInputStream.close();
@@ -106,7 +116,11 @@ public class UploadController {
             } catch (Exception e) {
                 LOG.error("IO流关闭", e);
             }
+
+        } catch (IOException e) {
+            LOG.error("分片合并异常",e);
         }
-        return new ResponseDto();
+
+        LOG.info("合并分片结束");
     }
 }
