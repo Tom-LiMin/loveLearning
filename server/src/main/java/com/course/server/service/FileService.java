@@ -11,7 +11,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -40,18 +39,8 @@ public class FileService {
     /**
      * 保存，id有值时更新，无值时新增
      */
+       //  觉得不需要下面这样 分流判断 但尝试几次后还是得判断 fileDb是否为空
     public void save(FileDto fileDto) {
-        File file = CopyUtil.copy(fileDto, File.class);
-        if (StringUtils.isEmpty(fileDto.getId())) {
-            this.insert(file);
-        } else {
-            File fileDb = selectByKey(fileDto.getKey());
-            fileDb.setShardIndex(fileDto.getShardIndex());
-            this.update(fileDb);
-        }
-    }
-       //  觉得不需要下面这样 分流判断
-    /*public void save(FileDto fileDto) {
         File file = CopyUtil.copy(fileDto, File.class);
         File fileDb = selectByKey(fileDto.getKey());
         if (fileDb == null) {
@@ -60,7 +49,7 @@ public class FileService {
             fileDb.setShardIndex(fileDto.getShardIndex());
             this.update(fileDb);
         }
-    }*/
+    }
 
 
     /**
