@@ -69,7 +69,7 @@ public class UploadController {
         fileDto.setPath(path);
         fileService.save(fileDto);
 
-        if (fileDto.getShardIndex() == fileDto.getShardTotal()) {
+        if (fileDto.getShardIndex().equals(fileDto.getShardTotal())) {
             this.merge(fileDto);
         }
 
@@ -123,6 +123,11 @@ public class UploadController {
         LOG.info("合并分片结束");
 
 //        System.gc();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //删除分片
         LOG.info("删除分片开始");

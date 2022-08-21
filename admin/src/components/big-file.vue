@@ -135,16 +135,22 @@ export default {
         let fileShard = _this.getFileShard(shardIndex,shardSize);
         // 将图片转为base64进行传输
         let fileReader = new FileReader();
+
+        Progress.show(parseInt((shardIndex - 1) * 100 / shardTotal));
+
         fileReader.onload = function (e) {
           let base64 = e.target.result;
 
           param.shard = base64;
 
-          Loading.show();
+          // Loading.show();  //有了进度条后，就不需要 加载动画了
           _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', param).then((response) => {
-            Loading.hide();
+            // Loading.hide();
             let resp = response.data;
             console.log("上传文件成功：", resp);
+
+            Progress.show(parseInt(shardIndex * 100 / shardTotal));
+
             if (shardIndex < shardTotal) {
               /*
               // 测试断点续传
@@ -156,6 +162,7 @@ export default {
               param.shardIndex = param.shardIndex + 1;
               _this.upload(param);
             } else {
+              Progress.hide();
               _this.afterUpload(resp);
               $("#" + _this.inputId + "-input").val("");
             }

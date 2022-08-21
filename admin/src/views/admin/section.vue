@@ -261,15 +261,15 @@
       getTime() {
         let _this = this;
 
-        /*setTimeout(function () {
+        setTimeout(function () {
           let ele = document.getElementById("video");
           _this.section.time = parseInt(ele.duration,10);
-        },1000);*/
+        },1000);
 
-        let ele = document.getElementById("video");
+       /* let ele = document.getElementById("video");
         ele.oncanplay = function () {
           parseInt(ele.duration,10);
-        }
+        }*/
         // _this.section.time = parseInt(ele.duration,10);
 
         // 解决不能实时预览的问题
