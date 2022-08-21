@@ -134,4 +134,14 @@ public class UploadController {
         }
         LOG.info("删除分片结束");
     }
+
+    // 检查分片是否上传以及 分片索引
+    @RequestMapping(value = "/check/{key}",method = RequestMethod.GET)
+    public ResponseDto check(@PathVariable String key) {
+        LOG.info("检查上传分片开始：{}", key);
+        ResponseDto responseDto = new ResponseDto();
+        FileDto fileDto = fileService.findByKey(key);
+        responseDto.setContent(fileDto);
+        return responseDto;
+    }
 }

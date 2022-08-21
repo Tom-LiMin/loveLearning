@@ -90,10 +90,37 @@ export default {
           'size': file.size,
           'key': key62
         };
-      _this.upload(param);
+      // _this.upload(param);
+      _this.check(param);
     },
 
+    /**
+     *检查文件状态，是否已上传？上传到第几个分片？
+     * @param param
+     */
+      check (param) {
+        let _this = this;
+        _this.$ajax.get(process.env.VUE_APP_SERVER + '/file/admin/check/' + param.key).then((response)=>{
+          let resp = response.data;
+          if (resp.success) {
+            let obj = resp.content;
+            if (!obj) {
+              param.shardIndex = 1;
+              console.log("没有找到文件记录，从分片1开始上传");
+              _this.upload(param);
+            } else {
+              param.shardIndex = obj.shardIndex + 1;
+              console.log("找到文件记录，从分片" + param.shardIndex + "开始上传");
+              _this.upload(param);
+            }
+          } else {
+            Toast.warning("文件上传失败");
+            $("#" + _this.inputId + "-input").val("");
+          }
+        });
+      },
 
+      // 将分片数据转成base64进行上传
       upload: function (param) {
         // 定义本地变量 新的分片的大小和索引都要改变
         let _this = this;
@@ -114,6 +141,12 @@ export default {
             let resp = response.data;
             console.log("上传文件成功：", resp);
             if (shardIndex < shardTotal) {
+              /*
+              // 测试断点续传
+              if (param.shardIndex === 3) {
+                return
+              }
+              */
               //上传下一个分片
               param.shardIndex = param.shardIndex + 1;
               _this.upload(param);

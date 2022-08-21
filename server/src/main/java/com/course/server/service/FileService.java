@@ -91,4 +91,13 @@ public class FileService {
             return fileList.get(0);
         }
     }
+
+    /**
+     * 按照文件表示查询数据库记录
+     * @param key
+     * @return
+     */
+    public FileDto findByKey(String key) {
+        return CopyUtil.copy(selectByKey(key),FileDto.class);
+    }
 }
