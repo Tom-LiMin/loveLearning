@@ -57,11 +57,7 @@ public class UploadController {
                 .append(".")
                 .append(suffix)
                 .toString();
-        String localPath = new StringBuffer(dir)
-                .append(File.separator)
-                .append(key)
-                .append(".")
-                .append(suffix)
+        String localPath = new StringBuffer(path)
                 .append(".")
                 .append(fileDto.getShardIndex()).toString();
         String fullPath = FILE_PATH + localPath;
@@ -84,7 +80,7 @@ public class UploadController {
         return responseDto;
     }
 
-    @GetMapping("/merge")
+//    @GetMapping("/merge")
     public void merge(FileDto fileDto) throws FileNotFoundException {
         LOG.info("合并分片开始");
         String path = fileDto.getPath();  // 注意这个取得是全路径
@@ -94,7 +90,7 @@ public class UploadController {
         // 新建 I/O 流
         FileOutputStream outputStream = new FileOutputStream(newFile,true);  // 选择追加写入的方式
         FileInputStream fileInputStream = null;
-        byte[] bytes = new byte[10 * 1024 * 1024];
+        byte[] bytes = new byte[5 * 1024 * 1024];
         int len;
 
         try {
@@ -104,23 +100,38 @@ public class UploadController {
                 while ((len = fileInputStream.read(bytes)) != -1) {
                     outputStream.write(bytes,0,len);
                 }
-            }
-            //读取第一个分片
 
+               // 每个分片输入流都需要关闭
+                fileInputStream.close();
+
+            }
+
+        } catch (IOException e) {
+            LOG.error("分片合并异常",e);
+        } finally {
             try {
                 if (fileInputStream != null) {
                     fileInputStream.close();
                 }
                 outputStream.close();
                 LOG.info("IO流关闭");
-            } catch (Exception e) {
-                LOG.error("IO流关闭", e);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-        } catch (IOException e) {
-            LOG.error("分片合并异常",e);
         }
 
         LOG.info("合并分片结束");
+
+//        System.gc();
+
+        //删除分片
+        LOG.info("删除分片开始");
+        for (int i = 0; i < shardTotal; i++) {
+            String filePath = FILE_PATH + path + "." + (i+1);
+            File file = new File(filePath);
+            boolean result = file.delete();
+            LOG.info("删除{},{}",filePath,result ? "成功" : "失败");
+        }
+        LOG.info("删除分片结束");
     }
 }

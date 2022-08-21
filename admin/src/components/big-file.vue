@@ -75,7 +75,7 @@ export default {
       }
 
       // 文件分片
-      let shardSize = 10 * 1024 * 1024;   // 以10MB为一个分片
+      let shardSize = 5 * 1024 * 1024;   // 以10MB为一个分片
       let shardIndex = 1;  // 分片索引 -> 1表示第一个分片
       let size = file.size;
       let shardTotal = Math.ceil(size / shardSize);
@@ -119,8 +119,8 @@ export default {
               _this.upload(param);
             } else {
               _this.afterUpload(resp);
+              $("#" + _this.inputId + "-input").val("");
             }
-            $("#" + _this.inputId + "-input").val("");
           });
         };
         fileReader.readAsDataURL(fileShard);
