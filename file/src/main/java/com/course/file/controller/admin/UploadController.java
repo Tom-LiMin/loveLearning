@@ -123,11 +123,12 @@ public class UploadController {
         LOG.info("合并分片结束");
 
 //        System.gc();
-        try {
+
+       /* try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
         //删除分片
         LOG.info("删除分片开始");
