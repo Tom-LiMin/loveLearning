@@ -253,14 +253,15 @@
       afterUpload(resp) {
         let _this = this;
         let video = resp.content.path;
-        // _this.section.video = video;
-        _this.$set(_this.section,'video',video);
+        _this.section.video = video;
+        // _this.$set(_this.section,'video',video);
         _this.getTime();
+        //解决不饿能实时预览的问题
+        _this.$forceUpdate();
       },
 
       getTime() {
         let _this = this;
-
         setTimeout(function () {
           let ele = document.getElementById("video");
           _this.section.time = parseInt(ele.duration,10);

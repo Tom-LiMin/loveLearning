@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.*;
 
 public class CommonUtil {
-   public static String MODULE = "file";
+   public static String MODULE = "system";
    public static String generatorConfigPath = "server\\src\\main\\resources\\generator\\generatorConfig.xml";
 
     public static Map<String,Object> CommonGenerator() throws Exception {
