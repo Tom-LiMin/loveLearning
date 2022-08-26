@@ -65,7 +65,8 @@ public class UserService {
      * 更新
      */
     private void update(User user) {
-        userMapper.updateByPrimaryKey(user);
+        user.setPassword(null);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     /**
@@ -86,5 +87,17 @@ public class UserService {
         } else {
             return users.get(0);
         }
+    }
+
+    /**
+     * 重置密码
+     * @param userDto
+     */
+    public void savePassword(UserDto userDto) {
+//        CopyUtil.copy(userDto,User.class);   //不需要这样，我们要修改的也只是密码而已，而不是表单提交的所有，但好像也不差
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setPassword(userDto.getPassword());
+        userMapper.updateByPrimaryKeySelective(user);
     }
 }
