@@ -143,6 +143,8 @@
       save() {
         let _this = this;
 
+        _this.user.password = hex_md5(_this.user.password + KEY);
+
         // 保存校验
         if (1 != 1
           || !Validator.require(_this.user.loginName, "登陆名")
