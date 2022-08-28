@@ -6,7 +6,7 @@
           <div class="center">
             <h1>
               <i class="ace-icon fa fa-leaf green"></i>
-              <span class="">控台登录</span>
+              <span class="">登录管理后台</span>
             </h1>
           </div>
 
@@ -27,14 +27,14 @@
                     <fieldset>
                       <label class="block clearfix">
                           <span class="block input-icon input-icon-right">
-                            <input type="text" class="form-control" placeholder="Username"/>
+                            <input v-model="user.loginName" type="text" class="form-control" placeholder="用户名"/>
                             <i class="ace-icon fa fa-user"></i>
                           </span>
                       </label>
 
                       <label class="block clearfix">
                           <span class="block input-icon input-icon-right">
-                            <input type="password" class="form-control" placeholder="Password"/>
+                            <input v-model="user.password" type="password" class="form-control" placeholder="密码"/>
                             <i class="ace-icon fa fa-lock"></i>
                           </span>
                       </label>
@@ -74,6 +74,11 @@
 <script>
 export default {
   name: "login",
+  data: function () {
+    return {
+      user:{},
+    }
+  },
   mounted: function () {
     $("body").removeClass("no-skin");
     $("body").attr("class", "login-layout light-login");
@@ -81,8 +86,35 @@ export default {
   },
   methods: {
     login() {
-      this.$router.push("/welcome")
-    }
+      let _this = this;
+      // this.$router.push("/welcome")
+      _this.user.password = hex_md5(_this.user.password + KEY);
+
+      // 保存校验
+      if (1 != 1
+          || !Validator.require(_this.user.loginName, "登陆名")
+          || !Validator.length(_this.user.loginName, "登陆名", 1, 50)
+          || !Validator.length(_this.user.name, "昵称", 1, 50)
+          || !Validator.require(_this.user.password, "密码")
+      ) {
+        return;
+      }
+
+      Loading.show();
+
+      _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/login', _this.user).then((response)=>{
+            Loading.hide();
+            let resp = response.data;
+            if (resp.success) {
+              console.log(resp.content);
+              _this.$router.push("/welcome");
+            } else {
+              Toast.warning(resp.message);
+            }
+      });
+    },
+
+
   }
 }
 </script>
