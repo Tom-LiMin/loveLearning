@@ -49,7 +49,7 @@
 
                         <button type="button"
                                 class="width-35 pull-right btn btn-sm btn-primary"
-                                @click="login()">
+                                v-on:click="login()">
                           <i class="ace-icon fa fa-key"></i>
                           <span class="bigger-110">登录</span>
                         </button>
@@ -88,17 +88,17 @@ export default {
     login() {
       let _this = this;
       // this.$router.push("/welcome")
-      _this.user.password = hex_md5(_this.user.password + KEY);
 
       // 保存校验
       if (1 != 1
           || !Validator.require(_this.user.loginName, "登陆名")
           || !Validator.length(_this.user.loginName, "登陆名", 1, 50)
-          || !Validator.length(_this.user.name, "昵称", 1, 50)
           || !Validator.require(_this.user.password, "密码")
       ) {
         return;
       }
+
+      _this.user.password = hex_md5(_this.user.password + KEY);
 
       Loading.show();
 
