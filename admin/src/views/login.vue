@@ -43,7 +43,7 @@
 
                       <div class="clearfix">
                         <label class="inline">
-                          <input type="checkbox" class="ace"/>
+                          <input v-model="remember" type="checkbox" class="ace"/>
                           <span class="lbl">记住我</span>
                         </label>
 
@@ -72,50 +72,69 @@
 </template>
 
 <script>
-export default {
-  name: "login",
-  data: function () {
-    return {
-      user:{},
-    }
-  },
-  mounted: function () {
-    $("body").removeClass("no-skin");
-    $("body").attr("class", "login-layout light-login");
-
-  },
-  methods: {
-    login() {
-      let _this = this;
-      // this.$router.push("/welcome")
-
-      // 保存校验
-      if (1 != 1
-          || !Validator.require(_this.user.loginName, "登陆名")
-          || !Validator.length(_this.user.loginName, "登陆名", 1, 50)
-          || !Validator.require(_this.user.password, "密码")
-      ) {
-        return;
+  export default {
+    name: "login",
+    data: function () {
+      return {
+        user:{},
+        remember:true //默认勾选记住我
       }
-
-      _this.user.password = hex_md5(_this.user.password + KEY);
-
-      Loading.show();
-
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/login', _this.user).then((response)=>{
-            Loading.hide();
-            let resp = response.data;
-            if (resp.success) {
-              console.log("登录成功，显示内容：",resp.content);
-              Tool.setLoginUser(resp.content);
-              _this.$router.push("/welcome");
-            } else {
-              Toast.warning(resp.message);
-            }
-      });
     },
+    mounted: function () {
+      let _this = this;
+      $("body").removeClass("no-skin");
+      $("body").attr("class", "login-layout light-login");
 
+      // 从缓存中获取记住的用户名密码，如果获取不到，说明上一次没有勾选“记住我”
+      let rememberUser = LocalStorage.get(LOCAL_KEY_REMEMBER_USER);
+      if (rememberUser != null) {
+        _this.user = rememberUser;
+      }
+    },
+    methods: {
+      login() {
+        let _this = this;
+        // this.$router.push("/welcome")
 
+        // 保存校验
+        if (1 != 1
+            || !Validator.require(_this.user.loginName, "登陆名")
+            || !Validator.length(_this.user.loginName, "登陆名", 1, 50)
+            || !Validator.require(_this.user.password, "密码")
+        ) {
+          return;
+        }
+
+        let passwordShow = _this.user.password;
+
+        _this.user.password = hex_md5(_this.user.password + KEY);
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/login', _this.user).then((response)=>{
+              Loading.hide();
+              let resp = response.data;
+              if (resp.success) {
+                console.log("登录成功，显示内容：",resp.content);
+                let loginUser = resp.content;
+                Tool.setLoginUser(resp.content);
+                //勾了记住我就保存到缓存中，没有的话就清空本地缓存
+                //注意：这里需要保存密码明文
+                if (_this.remember) {
+                  LocalStorage.set(LOCAL_KEY_REMEMBER_USER,{
+                    loginName:loginUser.loginName,
+                    password:passwordShow
+                  });
+                } else {
+                  //意味着没有勾选“记住我”，需要清空本地缓存，不然按照初始化mounted的流程会自动显示用户名密码
+                  // LocalStorage.clearAll();
+                  LocalStorage.set(LOCAL_KEY_REMEMBER_USER,null);
+                }
+
+                _this.$router.push("/welcome");
+              } else {
+                Toast.warning(resp.message);
+              }
+        });
+      },
+    }
   }
-}
 </script>
