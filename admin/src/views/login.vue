@@ -95,7 +95,6 @@
       login() {
         let _this = this;
         // this.$router.push("/welcome")
-
         // 保存校验
         if (1 != 1
             || !Validator.require(_this.user.loginName, "登陆名")
@@ -105,9 +104,15 @@
           return;
         }
 
-        let passwordShow = _this.user.password;
+        // let passwordShow = _this.user.password;  //将明文存到缓存中去
 
-        _this.user.password = hex_md5(_this.user.password + KEY);
+        // 如果密码是从缓存带出来的，则不需要重新加密
+        let md5 = hex_md5(_this.user.password);
+        let rememberUser = LocalStorage.get(LOCAL_KEY_REMEMBER_USER) || {};
+        if (md5 !== rememberUser.md5) {
+          _this.user.password = hex_md5(_this.user.password + KEY);
+        }
+
         Loading.show();
         _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/login', _this.user).then((response)=>{
               Loading.hide();
@@ -117,11 +122,15 @@
                 let loginUser = resp.content;
                 Tool.setLoginUser(resp.content);
                 //勾了记住我就保存到缓存中，没有的话就清空本地缓存
-                //注意：这里需要保存密码明文
-                if (_this.remember) {
+                // 旧：注意：这里需要保存密码明文
+                // 新：这里保存密码密文，并保存密文md5，用于检测密码是否被重新输入过
+                if (_this.remember) {   //判断记住我
+                  let md5 = hex_md5(_this.user.password);  // 前端的二次加密，用途→对比以便判断是否记住
                   LocalStorage.set(LOCAL_KEY_REMEMBER_USER,{
                     loginName:loginUser.loginName,
-                    password:passwordShow
+                    // password:passwordShow
+                    password:_this.user.password,
+                    md5:md5
                   });
                 } else {
                   //意味着没有勾选“记住我”，需要清空本地缓存，不然按照初始化mounted的流程会自动显示用户名密码
