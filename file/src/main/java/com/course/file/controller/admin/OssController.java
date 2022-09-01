@@ -33,19 +33,19 @@ public class OssController {
     @Resource
     private FileService fileService;
 
-    @Value("${accessKeyId}")
+    @Value("${oss.accessKeyId}")
     private String accessKeyId;
 
-    @Value("${accessKeySecret}")
+    @Value("${oss.accessKeySecret}")
     private String accessKeySecret;
 
-    @Value("${endpoint}")
+    @Value("${oss.endpoint}")
     private String endpoint;
 
-    @Value("${bucket}")
+    @Value("${oss.bucket}")
     private String bucket;
 
-    @Value("${ossDomain}")
+    @Value("${oss.domain}")
     private String ossDomain;
 
     @RequestMapping("/oss-append")

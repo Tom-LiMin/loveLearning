@@ -13,7 +13,7 @@ export default {
   name: 'big-file',
   props: {
     text: {
-      default: "上传文件"
+      default: "上传大文件"
     },
     inputId: {
       default: "file-upload"
@@ -108,7 +108,7 @@ export default {
      */
       check (param) {
         let _this = this;
-        _this.$ajax.get(process.env.VUE_APP_SERVER + '/file/admin/check/' + param.key).then((response)=>{
+        _this.$ajax.get(process.env.VUE_APP_SERVER + '/file/admin/checkVod/' + param.key).then((response)=>{
           let resp = response.data;
           if (resp.success) {
             let obj = resp.content;
