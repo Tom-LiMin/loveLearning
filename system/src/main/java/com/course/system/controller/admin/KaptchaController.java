@@ -1,6 +1,8 @@
 package com.course.system.controller.admin;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +21,16 @@ import java.io.ByteArrayOutputStream;
 @RequestMapping("/admin/kaptcha")
 public class KaptchaController {
 
+    public static final String BUSINESS_NAME = "验证码";
+    private static final Logger LOG = LoggerFactory.getLogger(KaptchaController.class);
+
     @Qualifier("getDefaultKaptcha")
     @Autowired
     DefaultKaptcha defaultKaptcha;
 
     @GetMapping("/image-code/{imageCodeToken}")
     public void imageCode(@PathVariable(value = "imageCodeToken") String imageCodeToken, HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception{
+        LOG.info("验证码生成开始");
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
         try {
             // 生成验证码字符串
