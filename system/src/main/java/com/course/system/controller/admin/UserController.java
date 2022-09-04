@@ -132,9 +132,16 @@ public class UserController {
     public ResponseDto logout(@PathVariable String token) {   // 由于不用从浏览器session或cookie中找，就不用http...
         ResponseDto responseDto = new ResponseDto();
         //request.getSession().removeAttribute(Constants.LOGIN_USER);
-        redisTemplate.delete(token);
-        LOG.info("从redis中删除token：{}",token);
-        return responseDto;
+        Boolean delif = redisTemplate.delete(token);
+        if (delif) {
+            LOG.info("从redis中删除token：{}",token);
+            responseDto.setMessage("您已退出登录");
+            return responseDto;
+        } else {
+            responseDto.setSuccess(false);
+            responseDto.setMessage("退出登录失败");
+            return responseDto;
+        }
     }
 }
 

@@ -134,7 +134,7 @@ export default {
           // 定时自动保存
           _this.saveContentInterval = setInterval(function() {
             _this.saveContent();
-          }, 5000);
+          }, 180000);
         } else {
           Toast.warning(resp.message);
         }

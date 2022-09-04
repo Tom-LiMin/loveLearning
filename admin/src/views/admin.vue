@@ -575,6 +575,7 @@ export default {
         let resp = response.data;
         if (resp.success) {
           console.log("注销用户成功!");
+          Toast.success(resp.message);
           // Tool.setLoginUser(null);
           SessionStorage.clearAll();
           _this.$router.push("/login");
