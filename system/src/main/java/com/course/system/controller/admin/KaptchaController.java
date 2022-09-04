@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/admin/kaptcha")
 public class KaptchaController {
 
-    public static final String BUSINESS_NAME = "验证码";
+    public static final String BUSINESS_NAME = "图形验证码";
     private static final Logger LOG = LoggerFactory.getLogger(KaptchaController.class);
 
     @Qualifier("getDefaultKaptcha")
@@ -32,7 +32,7 @@ public class KaptchaController {
     DefaultKaptcha defaultKaptcha;
 
     @Resource
-    public RedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/image-code/{imageCodeToken}")
     public void imageCode(@PathVariable(value = "imageCodeToken") String imageCodeToken, HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception{

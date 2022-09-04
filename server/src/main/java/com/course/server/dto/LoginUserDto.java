@@ -18,6 +18,8 @@ public class LoginUserDto {
      */
     private String name;
 
+    private String token;
+
 
     public String getId() {
         return id;
@@ -43,12 +45,21 @@ public class LoginUserDto {
         this.name = name;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("LoginUserDto{");
         sb.append("id='").append(id).append('\'');
         sb.append(", loginName='").append(loginName).append('\'');
         sb.append(", name='").append(name).append('\'');
+        sb.append(", token='").append(token).append('\'');
         sb.append('}');
         return sb.toString();
     }
