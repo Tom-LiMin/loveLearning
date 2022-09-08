@@ -382,11 +382,19 @@
                 <b class="arrow"></b>
               </li>
 
-              <li class="">
-                <a href="jqgrid.html">
+              <li class="" id="system-resource-sidebar">
+                <router-link to="/system/resource">
                   <i class="menu-icon fa fa-caret-right"></i>
-                  权限管理
-                </a>
+                  资源管理
+                </router-link>
+
+                <b class="arrow"></b>
+              </li>
+              <li class="" id="system-resource-sidebar">
+                <router-link to="/system/role">
+                  <i class="menu-icon fa fa-caret-right"></i>
+                  角色管理
+                </router-link>
 
                 <b class="arrow"></b>
               </li>
@@ -404,32 +412,27 @@
             <b class="arrow"></b>
 
             <ul class="submenu">
+              <li class="" id="business-course-sidebar">
+              <router-link to="/business/course">
+                <i class="menu-icon fa fa-caret-right"></i>
+                课程管理
+              </router-link>
+              <b class="arrow"></b>
+            </li>
               <li class="" id="business-category-sidebar">
                 <router-link to="/business/category">
                   <i class="menu-icon fa fa-caret-right"></i>
                   分类管理
                 </router-link>
-
                 <b class="arrow"></b>
               </li>
-              <li class="" id="business-course-sidebar">
-                <router-link to="/business/course">
-                  <i class="menu-icon fa fa-caret-right"></i>
-                  课程管理
-                </router-link>
-
-                <b class="arrow"></b>
-              </li>
-
               <li class="" id="business-teacher-sidebar">
                 <router-link to="/business/teacher">
                   <i class="menu-icon fa fa-caret-right"></i>
                   讲师管理
                 </router-link>
-
                 <b class="arrow"></b>
               </li>
-
             </ul>
           </li>
 
